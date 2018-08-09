@@ -30,9 +30,13 @@
   UefiRuntimeServicesTableLib|MdePkg/Library/UefiRuntimeServicesTableLib/UefiRuntimeServicesTableLib.inf
   UefiBootServicesTableLib|MdePkg/Library/UefiBootServicesTableLib/UefiBootServicesTableLib.inf
 
+  PciLib|MdePkg/Library/BasePciLibCf8/BasePciLibCf8.inf
+
 [Components]
   #
   # Application Samples
   #
-  123IVPkg/Samples/Hello.inf
-  123IVPkg/Samples/Hello2.inf
+  123IVPkg/Samples/Hello/Hello.inf
+  123IVPkg/Samples/Hello/Hello2.inf
+  123IVPkg/Samples/PciScan/PciScan.inf
+
