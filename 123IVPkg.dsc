@@ -40,3 +40,7 @@
   123IVPkg/Samples/Hello/Hello2.inf
   123IVPkg/Samples/PciScan/PciScan.inf
 
+  #
+  # Application
+  #
+  123IVPkg/App/XhciViewer/XhciViewer.inf
