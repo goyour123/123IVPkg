@@ -114,7 +114,6 @@ ScanXhc (
   USB3_CONTROLLER              *Xhc;
 
   Xhc = AllocateZeroPool (sizeof (USB3_CONTROLLER));
-  Xhc->PciConfigBuf = AllocateZeroPool (sizeof (PCI_CONFIG));
 
   for (Bus = 0; Bus <= MAX_BUS_NUM; Bus++) {
     for (Dev = 0; Dev <= MAX_DEV_NUM; Dev++) {
