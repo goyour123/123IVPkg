@@ -6,8 +6,8 @@
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/MemoryAllocationLib.h>
 
-#define MAX_BUS_NUM 255
-#define MAX_DEV_NUM 31
+#define MAX_BUS_NUM  255
+#define MAX_DEV_NUM  31
 #define MAX_FUNC_NUM 7
 
 #define XHCI_BASE_CLASS 0x0c
@@ -102,11 +102,11 @@ FrontPage (
   for (Index = 0; Index < Xhc->XhcNum; Index++) {
     Print (L"     %x   %02x   %02x    %02x      %04x      %04x\n",
       Index,
-      (Xhc->PciConfigBuf + Index * sizeof (PCI_CONFIG))->Bus, 
-      (Xhc->PciConfigBuf + Index * sizeof (PCI_CONFIG))->Device, 
-      (Xhc->PciConfigBuf + Index * sizeof (PCI_CONFIG))->Function, 
-      (Xhc->PciConfigBuf + Index * sizeof (PCI_CONFIG))->VendorId, 
-      (Xhc->PciConfigBuf + Index * sizeof (PCI_CONFIG))->DeviceId
+      ((PCI_CONFIG*)((UINT8*)Xhc->PciConfigBuf + Index * sizeof (PCI_CONFIG)))->Bus, 
+      ((PCI_CONFIG*)((UINT8*)Xhc->PciConfigBuf + Index * sizeof (PCI_CONFIG)))->Device, 
+      ((PCI_CONFIG*)((UINT8*)Xhc->PciConfigBuf + Index * sizeof (PCI_CONFIG)))->Function, 
+      ((PCI_CONFIG*)((UINT8*)Xhc->PciConfigBuf + Index * sizeof (PCI_CONFIG)))->VendorId, 
+      ((PCI_CONFIG*)((UINT8*)Xhc->PciConfigBuf + Index * sizeof (PCI_CONFIG)))->DeviceId
       );
   }
 }
@@ -177,13 +177,13 @@ ScanXhc (
           Bar0     = PciRead32 (PCI_LIB_ADDRESS (Bus, Dev, Func, 0x10));
           Bar1     = PciRead32 (PCI_LIB_ADDRESS (Bus, Dev, Func, 0x14));
 
-          (Xhc->PciConfigBuf + ((Xhc->XhcNum - 1) * sizeof (PCI_CONFIG)))->Bus            = (Bus & 0xff);
-          (Xhc->PciConfigBuf + ((Xhc->XhcNum - 1) * sizeof (PCI_CONFIG)))->Device         = Dev;
-          (Xhc->PciConfigBuf + ((Xhc->XhcNum - 1) * sizeof (PCI_CONFIG)))->Function       = Func;
-          (Xhc->PciConfigBuf + ((Xhc->XhcNum - 1) * sizeof (PCI_CONFIG)))->VendorId       = VendorId;
-          (Xhc->PciConfigBuf + ((Xhc->XhcNum - 1) * sizeof (PCI_CONFIG)))->DeviceId       = DeviceId;
-          (Xhc->PciConfigBuf + ((Xhc->XhcNum - 1) * sizeof (PCI_CONFIG)))->BaseAddress[0] = Bar0;
-          (Xhc->PciConfigBuf + ((Xhc->XhcNum - 1) * sizeof (PCI_CONFIG)))->BaseAddress[1] = Bar1;
+          ((PCI_CONFIG*)((UINT8*)(Xhc->PciConfigBuf) + ((Xhc->XhcNum - 1) * sizeof (PCI_CONFIG))))->Bus            = (Bus & 0xff);
+          ((PCI_CONFIG*)((UINT8*)(Xhc->PciConfigBuf) + ((Xhc->XhcNum - 1) * sizeof (PCI_CONFIG))))->Device         = Dev;
+          ((PCI_CONFIG*)((UINT8*)(Xhc->PciConfigBuf) + ((Xhc->XhcNum - 1) * sizeof (PCI_CONFIG))))->Function       = Func;
+          ((PCI_CONFIG*)((UINT8*)(Xhc->PciConfigBuf) + ((Xhc->XhcNum - 1) * sizeof (PCI_CONFIG))))->VendorId       = VendorId;
+          ((PCI_CONFIG*)((UINT8*)(Xhc->PciConfigBuf) + ((Xhc->XhcNum - 1) * sizeof (PCI_CONFIG))))->DeviceId       = DeviceId;
+          ((PCI_CONFIG*)((UINT8*)(Xhc->PciConfigBuf) + ((Xhc->XhcNum - 1) * sizeof (PCI_CONFIG))))->BaseAddress[0] = Bar0;
+          ((PCI_CONFIG*)((UINT8*)(Xhc->PciConfigBuf) + ((Xhc->XhcNum - 1) * sizeof (PCI_CONFIG))))->BaseAddress[1] = Bar1;
         }
 
       }
