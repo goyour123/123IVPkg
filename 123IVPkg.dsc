@@ -52,4 +52,4 @@
   #
   # Application
   #
-  123IVPkg/App/XhciViewer/XhciViewer.inf
+  123IVPkg/Application/XhciViewer/XhciViewer.inf
