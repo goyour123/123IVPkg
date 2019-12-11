@@ -21,7 +21,7 @@ MpServiceProtocolMain (
 
   Status = gBS->LocateProtocol (&gEfiMpServiceProtocolGuid, NULL, (VOID **) &MpService);
   if (EFI_ERROR (Status)) {
-    Print (L"%a: Locate MP Services Protocol %r\n");
+    Print (L"Locate MP Services Protocol %r\n", Status);
     return Status;
   }
 
