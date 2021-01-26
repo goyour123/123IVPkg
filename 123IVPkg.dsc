@@ -54,4 +54,5 @@
   #
   123IVPkg/Application/XhciViewer/XhciViewer.inf
   123IVPkg/Application/MpServiceProtocol/MpServiceProtocol.inf
+  123IVPkg/Application/Ec/Ec.inf
 
