@@ -12,8 +12,10 @@
 
 [Packages]
   MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
 
 [LibraryClasses]
   UefiLib
   UefiApplicationEntryPoint
   IoLib
+  MemoryAllocationLib

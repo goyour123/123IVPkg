@@ -2,7 +2,9 @@
 #include <Uefi.h>
 #include <Library/UefiLib.h>
 #include <Library/UefiApplicationEntryPoint.h>
+
 #include <Library/IoLib.h>
+#include <Library/MemoryAllocationLib.h>
 
 #define TIME_OUT               0xffff
 
@@ -33,7 +35,7 @@ typedef union {
 
 EFI_STATUS
 WaitInputBufferEmpty (
-  IN UINT16 EcStatusPort
+  IN UINTN EcStatusPort
   )
 {
   EFI_STATUS Status;
@@ -58,7 +60,7 @@ WaitInputBufferEmpty (
 
 EFI_STATUS
 WaitOutputBufferFull (
-  IN UINT16 EcStatusPort
+  IN UINTN EcStatusPort
   )
 {
   EFI_STATUS Status;
@@ -119,6 +121,33 @@ ReadEc (
   return Status;
 }
 
+VOID
+PrintRegs (
+  VOID*  Buffer,
+  UINTN  Length
+  )
+{
+  UINTN Index;
+
+  // Print column header
+  for (Index = 0; Index < 0x10; Index++) {
+    Print (L" %02X", Index);
+  }
+
+  for (Index = 0; Index < Length; Index++) {
+    // Print row header
+    if (Index % 0x10 == 0) {
+      Print (Index % 0x10);
+    }
+
+    Print (L" %02X", ((UINT8 *)Buffer)[Index]);
+
+    if (Index % 0x10 == 0xf) {
+      Print (L"\n");
+    }
+  }
+}
+
 EFI_STATUS
 EFIAPI
 EcMain (
@@ -126,6 +155,24 @@ EcMain (
   IN EFI_SYSTEM_TABLE  *SystemTable
   )
 {
-  Print(L"Hello World\n");
+  EFI_STATUS Status;
+  UINTN      Index;
+  UINT8      Data;
+  UINT8      *Buffer;
+  UINTN      BufferLen;
+
+  Data = 0;
+  BufferLen = 0x100;
+  Buffer = AllocateZeroPool (BufferLen);
+
+  for (Index = 0; Index < BufferLen; Index++) {
+    Status = ReadEc ((UINT8) Index, Data);
+    if (!EFI_ERROR (Status)) {
+      Buffer[Index] = Data;
+    }
+  }
+
+  PrintRegs (Buffer, BufferLen);
+
   return EFI_SUCCESS;
 }
