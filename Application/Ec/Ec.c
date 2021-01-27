@@ -9,8 +9,8 @@
 #define TIME_OUT               0xffff
 
 // EC Register
-#define EC_COMMAND_STATUS_PORT 0x66
-#define EC_DATA_PORT           0x62
+#define EC_COMMAND_STATUS_PORT 0x666
+#define EC_DATA_PORT           0x662
 
 typedef union {
   struct {
@@ -85,8 +85,8 @@ WaitOutputBufferFull (
 
 EFI_STATUS
 ReadEc (
-  IN  UINT8 Addr,
-  OUT UINT8 Data
+  IN  UINT8 *Offset,
+  OUT UINT8 *Data
   )
 {
   EFI_STATUS Status;
@@ -107,7 +107,7 @@ ReadEc (
   }
 
   // Send read EC command address
-  IoWrite8 (EC_COMMAND_STATUS_PORT, Addr);
+  IoWrite8 (EC_DATA_PORT, *Offset);
 
   // Wait OBF full
   Status = WaitOutputBufferFull (EC_COMMAND_STATUS_PORT);
@@ -116,7 +116,7 @@ ReadEc (
   }
 
   // Read output data
-  Data = IoRead8 (EC_DATA_PORT);
+  *Data = IoRead8 (EC_DATA_PORT);
 
   return Status;
 }
@@ -130,14 +130,16 @@ PrintRegs (
   UINTN Index;
 
   // Print column header
+  Print (L"   ");
   for (Index = 0; Index < 0x10; Index++) {
     Print (L" %02X", Index);
   }
+  Print (L"\n");
 
   for (Index = 0; Index < Length; Index++) {
     // Print row header
     if (Index % 0x10 == 0) {
-      Print (Index % 0x10);
+      Print (L" %02X", Index % 0x10);
     }
 
     Print (L" %02X", ((UINT8 *)Buffer)[Index]);
@@ -166,7 +168,7 @@ EcMain (
   Buffer = AllocateZeroPool (BufferLen);
 
   for (Index = 0; Index < BufferLen; Index++) {
-    Status = ReadEc ((UINT8) Index, Data);
+    Status = ReadEc (&((UINT8) Index), &Data);
     if (!EFI_ERROR (Status)) {
       Buffer[Index] = Data;
     }
