@@ -1,0 +1,18 @@
+
+[Defines]
+  INF_VERSION      = 0x00010006
+  BASE_NAME        = UserInterfaceLib
+  FILE_GUID        = 462c3dc4-1234-4067-8bc7-80f7b4ce8c91
+  MODULE_TYPE      = BASE
+  VERSION_STRING   = 0.1
+  LIBRARY_CLASS    = UiLib
+
+[Sources]
+  UserInterfaceLib.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+
+[LibraryClasses]
+  UefiBootServicesTableLib

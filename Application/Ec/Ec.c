@@ -7,6 +7,8 @@
 #include <Library/MemoryAllocationLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 
+#include <Library/UserInterfaceLib.h>
+
 #define TIME_OUT               0xffff
 
 // EC Register
@@ -135,6 +137,7 @@ PrintRegs (
 {
   UINTN           Index;
   CURSOR_POSITION *Cursor;
+  EFI_INPUT_KEY   Key;
 
   gST->ConOut->ClearScreen (gST->ConOut);
 
@@ -165,8 +168,12 @@ PrintRegs (
 
   gST->ConOut->SetCursorPosition(gST->ConOut, Cursor[0].Column, Cursor[0].Row);
 
-  gBS->WaitForEvent (1, &gST->ConIn->WaitForKey, &Index);
-
+  while (TRUE) {
+    WaitForKeyStroke (&Key);
+    if (Key.ScanCode == SCAN_ESC) {
+      break;
+    }
+  }
 }
 
 EFI_STATUS
@@ -197,7 +204,6 @@ EcMain (
 
   PrintRegs (Buffer, BufferLen);
 
-  gBS->WaitForEvent (1, &gST->ConIn->WaitForKey, &Index);
   gST->ConOut->ClearScreen (gST->ConOut);
 
   return EFI_SUCCESS;

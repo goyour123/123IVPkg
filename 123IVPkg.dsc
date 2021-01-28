@@ -41,6 +41,11 @@
   #
   PcdLib|MdePkg/Library/BasePcdLibNull/BasePcdLibNull.inf
 
+  #
+  # 123IVPkg Libraries
+  #
+  UiLib|123IVPkg/Library/UserInterfaceLib/UserInterfaceLib.inf
+
 [Components]
   #
   # Application Samples

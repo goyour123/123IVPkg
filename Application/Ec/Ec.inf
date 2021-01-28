@@ -13,9 +13,12 @@
 [Packages]
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
+  123IVPkg/123IVPkg.dec
 
 [LibraryClasses]
   UefiLib
   UefiApplicationEntryPoint
   IoLib
   MemoryAllocationLib
+  UefiBootServicesTableLib
+  UiLib
