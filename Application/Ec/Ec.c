@@ -136,8 +136,11 @@ PrintRegs (
   )
 {
   UINTN           Index;
+  UINT8           RegIndex;
   CURSOR_POSITION *Cursor;
   EFI_INPUT_KEY   Key;
+
+  RegIndex = 0;
 
   gST->ConOut->ClearScreen (gST->ConOut);
 
@@ -166,12 +169,44 @@ PrintRegs (
     }
   }
 
-  gST->ConOut->SetCursorPosition(gST->ConOut, Cursor[0].Column, Cursor[0].Row);
-
   while (TRUE) {
+
+    // Show current register index on left-top corner
+    gST->ConOut->SetCursorPosition (gST->ConOut, 0, 0);
+    Print(L" %02X", RegIndex);
+
+    gST->ConOut->SetCursorPosition (gST->ConOut, Cursor[RegIndex].Column, Cursor[RegIndex].Row);
+
     WaitForKeyStroke (&Key);
+
     if (Key.ScanCode == SCAN_ESC) {
       break;
+    }
+
+    if (Key.ScanCode == SCAN_DOWN) {
+      if (RegIndex / 0x10 == 0xf) {
+        RegIndex -= 0xf0;
+      } else {
+        RegIndex += 0x10;
+      }
+    } else if (Key.ScanCode == SCAN_UP) {
+      if (RegIndex / 0x10 == 0) {
+        RegIndex += 0xf0;
+      } else {
+        RegIndex -= 0x10;
+      }
+    } else if (Key.ScanCode == SCAN_LEFT) {
+      if (RegIndex % 0x10 == 0) {
+        RegIndex += 0xf;
+      } else {
+        RegIndex -= 1;
+      }
+    } else if (Key.ScanCode == SCAN_RIGHT) {
+      if (RegIndex % 0x10 == 0xf) {
+        RegIndex -= 0xf;
+      } else {
+        RegIndex += 1;
+      }
     }
   }
 }
