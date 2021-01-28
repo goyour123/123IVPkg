@@ -5,6 +5,7 @@
 
 #include <Library/IoLib.h>
 #include <Library/MemoryAllocationLib.h>
+#include <Library/UefiBootServicesTableLib.h>
 
 #define TIME_OUT               0xffff
 
@@ -32,6 +33,11 @@ typedef union {
 #define BURST_ENABLE_EC  0x82
 #define BURST_DISABLE_EC 0x83
 #define Query_EC         0x84
+
+typedef struct {
+  UINTN Column;
+  UINTN Row;
+} CURSOR_POSITION;
 
 EFI_STATUS
 WaitInputBufferEmpty (
@@ -123,14 +129,19 @@ ReadEc (
 
 VOID
 PrintRegs (
-  VOID*  Buffer,
+  VOID*  Regs,
   UINTN  Length
   )
 {
-  UINTN Index;
+  UINTN           Index;
+  CURSOR_POSITION *Cursor;
+
+  gST->ConOut->ClearScreen (gST->ConOut);
+
+  Cursor = AllocateZeroPool (sizeof (CURSOR_POSITION) * Length);
 
   // Print column header
-  Print (L"   ");
+  Print (L" XX");
   for (Index = 0; Index < 0x10; Index++) {
     Print (L" %02X", Index);
   }
@@ -139,15 +150,23 @@ PrintRegs (
   for (Index = 0; Index < Length; Index++) {
     // Print row header
     if (Index % 0x10 == 0) {
-      Print (L" %02X", Index % 0x10);
+      Print (L" %02X", Index / 0x10);
     }
 
-    Print (L" %02X", ((UINT8 *)Buffer)[Index]);
+    // Print Register value
+    Print (L" %02X", ((UINT8 *)Regs)[Index]);
+    Cursor[Index].Column = gST->ConOut->Mode->CursorColumn - 1;
+    Cursor[Index].Row = gST->ConOut->Mode->CursorRow;
 
     if (Index % 0x10 == 0xf) {
       Print (L"\n");
     }
   }
+
+  gST->ConOut->SetCursorPosition(gST->ConOut, Cursor[0].Column, Cursor[0].Row);
+
+  gBS->WaitForEvent (1, &gST->ConIn->WaitForKey, &Index);
+
 }
 
 EFI_STATUS
@@ -167,6 +186,8 @@ EcMain (
   BufferLen = 0x100;
   Buffer = AllocateZeroPool (BufferLen);
 
+  gST->ConOut->SetMode(gST->ConOut, 0);
+
   for (Index = 0; Index < BufferLen; Index++) {
     Status = ReadEc (&((UINT8) Index), &Data);
     if (!EFI_ERROR (Status)) {
@@ -175,6 +196,9 @@ EcMain (
   }
 
   PrintRegs (Buffer, BufferLen);
+
+  gBS->WaitForEvent (1, &gST->ConIn->WaitForKey, &Index);
+  gST->ConOut->ClearScreen (gST->ConOut);
 
   return EFI_SUCCESS;
 }
