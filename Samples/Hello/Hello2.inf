@@ -1,0 +1,18 @@
+
+[Defines]
+  INF_VERSION    = 0x00010006
+  BASE_NAME      = Hello2
+  FILE_GUID      = fe343a45-1234-4438-9dc7-bc83485b4509
+  MODULE_TYPE    = UEFI_APPLICATION
+  VERSION_STRING = 0.1
+  ENTRY_POINT    = UefiMain
+
+[Sources]
+  Hello2.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+
+[LibraryClasses]
+  UefiLib
+  UefiApplicationEntryPoint

@@ -1,0 +1,12 @@
+
+[Defines]
+  DEC_SPECIFICATION              = 0x00010005
+  PACKAGE_NAME                   = 123IVPkg
+  PACKAGE_GUID                   = 47090cbb-1234-4146-af93-467df01899f3
+  PACKAGE_VERSION                = 0.01
+
+[Includes]
+  Include
+
+[LibraryClasses]
+  UiLib|Include/Library/UserInterfaceLib.h

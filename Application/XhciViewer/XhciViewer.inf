@@ -1,0 +1,21 @@
+
+[Defines]
+  INF_VERSION      = 0x00010006
+  BASE_NAME        = XhciViewer
+  FILE_GUID        = 5049036f-1234-41b1-979f-223b7a87b7a7
+  MODULE_TYPE      = UEFI_APPLICATION
+  VERSION_STRING   = 0.1
+  ENTRY_POINT      = XhciViewerMain
+
+[Sources]
+  XhciViewer.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  123IVPkg/123IVPkg.dec
+
+[LibraryClasses]
+  UefiLib
+  UefiApplicationEntryPoint
+  PciLib
+  UiLib

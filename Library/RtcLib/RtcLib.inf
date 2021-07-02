@@ -1,0 +1,17 @@
+
+[Defines]
+  INF_VERSION      = 0x00010006
+  BASE_NAME        = RtcLib
+  FILE_GUID        = c228796d-1234-4553-ae5b-4c0dcbd7d6f5
+  MODULE_TYPE      = BASE
+  VERSION_STRING   = 0.1
+  LIBRARY_CLASS    = RtcLib
+
+[Sources]
+  RtcLib.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+
+[LibraryClasses]
+  IoLib

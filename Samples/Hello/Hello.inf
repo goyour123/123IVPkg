@@ -1,0 +1,19 @@
+
+[Defines]
+  INF_VERSION    = 0x00010006
+  BASE_NAME      = Hello
+  FILE_GUID      = 0ef737ed-1234-4abd-ba7a-bb1f84002628
+  MODULE_TYPE    = UEFI_APPLICATION
+  VERSION_STRING = 0.1
+  ENTRY_POINT    = ShellCEntryLib
+
+[Sources]
+  Hello.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  ShellPkg/ShellPkg.dec
+
+[LibraryClasses]
+  UefiLib
+  ShellCEntryLib

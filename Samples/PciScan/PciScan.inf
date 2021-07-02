@@ -1,0 +1,19 @@
+
+[Defines]
+  INF_VERSION    = 0x00010006
+  BASE_NAME      = PciScan
+  FILE_GUID      = 5d6d8324-1234-4000-ab79-e5eba1689dcf
+  MODULE_TYPE    = UEFI_APPLICATION
+  VERSION_STRING = 0.1
+  ENTRY_POINT    = PciScanMain
+
+[Sources]
+  PciScan.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+
+[LibraryClasses]
+  UefiLib
+  UefiApplicationEntryPoint
+  PciLib
