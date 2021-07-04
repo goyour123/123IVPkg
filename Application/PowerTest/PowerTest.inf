@@ -1,0 +1,21 @@
+
+[Defines]
+  INF_VERSION      = 0x00010006
+  BASE_NAME        = PowerTest
+  FILE_GUID        = 22993920-1234-4a78-9fe1-50a24f44ed28
+  MODULE_TYPE      = UEFI_APPLICATION
+  VERSION_STRING   = 0.1
+  ENTRY_POINT      = PowerTestMain
+
+[Sources]
+  PowerTest.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  123IVPkg/123IVPkg.dec
+
+[LibraryClasses]
+  UefiLib
+  UefiApplicationEntryPoint
+  IoLib
+  RtcLib
