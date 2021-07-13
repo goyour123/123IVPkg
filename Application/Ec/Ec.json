@@ -1,4 +1,4 @@
 {
-    "CommandStatusPort": 0x666,
-    "DataPort": 0x662
+    "CommandStatusPort": "0x666",
+    "DataPort": "0x662"
 }

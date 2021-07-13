@@ -9,6 +9,8 @@
   BUILD_TARGETS           = DEBUG|RELEASE|NOOPT
   SKUID_IDENTIFIER        = DEFAULT
 
+  DEFINE REDFISH_ENABLE   = TRUE
+
 [LibraryClasses]
   #
   # Entry Point Libraries
@@ -41,6 +43,11 @@
   #
   PcdLib|MdePkg/Library/BasePcdLibNull/BasePcdLibNull.inf
 
+!if $(REDFISH_ENABLE) == TRUE
+  !include RedfishPkg/RedfishDefines.dsc.inc
+  !include RedfishPkg/RedfishLibs.dsc.inc
+!endif
+
   #
   # 123IVPkg Libraries
   #
@@ -63,3 +70,5 @@
   123IVPkg/Application/Ec/Ec.inf
   123IVPkg/Application/PowerTest/PowerTest.inf
 
+[BuildOptions]
+  *_*_*_CC_FLAGS  = /D REDFISH_ENABLE

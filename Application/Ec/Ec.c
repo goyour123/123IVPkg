@@ -12,6 +12,8 @@
 #include <Protocol/LoadedImage.h>
 #include <Protocol/DevicePath.h>
 
+#include <Library/JsonLib.h>
+
 #define TIME_OUT               0xffff
 
 // EC Register
@@ -301,6 +303,9 @@ EcMain (
   EFI_SIMPLE_FILE_SYSTEM_PROTOCOL *SimpleFileSystem;
   EFI_FILE                        *Root;
   EFI_FILE                        *FileHandle;
+  UINTN                           EcCommandStatusPort, EcDataPort;
+  EDKII_JSON_VALUE                *JsonObj;
+  EDKII_JSON_ERROR                JsonErr;
 
   Status = gBS->HandleProtocol (
              ImageHandle,
@@ -373,6 +378,15 @@ EcMain (
     Print (L"FileHandle->Read: %r\n", Status);
     return Status;
   }
+
+  JsonObj = JsonLoadBuffer (Buffer, BufferLen, 0, &JsonErr);
+  if (!JsonValueIsObject (JsonObj)) {
+    Print (L"Configuration file is not a json object\n");
+    return EFI_SUCCESS;
+  }
+
+  EcCommandStatusPort = StrHexToUintn (JsonValueGetUnicodeString (JsonObjectGetValue (JsonObj, "CommandStatusPort")));
+  EcDataPort = StrHexToUintn (JsonValueGetUnicodeString (JsonObjectGetValue (JsonObj, "DataPort")));
 
   Data = 0;
   BufferLen = 0x100;
