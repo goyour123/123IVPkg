@@ -98,6 +98,8 @@ WaitOutputBufferFull (
 
 EFI_STATUS
 ReadEc (
+  IN  UINTN CommandStatusPort,
+  IN  UINTN DataPort,
   IN  UINT8 *Offset,
   OUT UINT8 *Data
   )
@@ -105,31 +107,31 @@ ReadEc (
   EFI_STATUS Status;
 
   // Wait IBF empty
-  Status = WaitInputBufferEmpty (EC_COMMAND_STATUS_PORT);
+  Status = WaitInputBufferEmpty (CommandStatusPort);
   if (EFI_ERROR (Status)) {
     return Status;
   }
 
   // Send read EC command
-  IoWrite8 (EC_COMMAND_STATUS_PORT, READ_EC);
+  IoWrite8 (CommandStatusPort, READ_EC);
 
   // Wait IBF empty
-  Status = WaitInputBufferEmpty (EC_COMMAND_STATUS_PORT);
+  Status = WaitInputBufferEmpty (CommandStatusPort);
   if (EFI_ERROR (Status)) {
     return Status;
   }
 
   // Send read EC command address
-  IoWrite8 (EC_DATA_PORT, *Offset);
+  IoWrite8 (DataPort, *Offset);
 
   // Wait OBF full
-  Status = WaitOutputBufferFull (EC_COMMAND_STATUS_PORT);
+  Status = WaitOutputBufferFull (CommandStatusPort);
   if (EFI_ERROR (Status)) {
     return Status;
   }
 
   // Read output data
-  *Data = IoRead8 (EC_DATA_PORT);
+  *Data = IoRead8 (DataPort);
 
   return Status;
 }
@@ -396,7 +398,7 @@ EcMain (
   }
 
   for (Index = 0; Index < BufferLen; Index++) {
-    Status = ReadEc (&((UINT8) Index), &Data);
+    Status = ReadEc (EcCommandStatusPort, EcDataPort, &((UINT8) Index), &Data);
     if (!EFI_ERROR (Status)) {
       Buffer[Index] = Data;
     }
