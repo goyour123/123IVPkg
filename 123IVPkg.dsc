@@ -11,6 +11,14 @@
 
   DEFINE REDFISH_ENABLE   = TRUE
 
+!if $(REDFISH_ENABLE) == TRUE
+  DEFINE REDFISH_DEF_DSC  = RedfishPkg/RedfishDefines.dsc.inc
+  DEFINE REDFISH_LIB_DSC  = RedfishPkg/RedfishLibs.dsc.inc
+!else
+  DEFINE REDFISH_DEF_DSC  =
+  DEFINE REDFISH_LIB_DSC  =
+!endif
+
 [LibraryClasses]
   #
   # Entry Point Libraries
@@ -43,16 +51,16 @@
   #
   PcdLib|MdePkg/Library/BasePcdLibNull/BasePcdLibNull.inf
 
-!if $(REDFISH_ENABLE) == TRUE
-  !include RedfishPkg/RedfishDefines.dsc.inc
-  !include RedfishPkg/RedfishLibs.dsc.inc
-!endif
-
   #
   # 123IVPkg Libraries
   #
   UiLib|123IVPkg/Library/UserInterfaceLib/UserInterfaceLib.inf
   RtcLib|123IVPkg/Library/RtcLib/RtcLib.inf
+
+!if $(REDFISH_ENABLE) == TRUE
+  !include $(REDFISH_DEF_DSC)
+  !include $(REDFISH_LIB_DSC)
+!endif
 
 [Components]
   #
@@ -67,8 +75,14 @@
   #
   123IVPkg/Application/XhciViewer/XhciViewer.inf
   123IVPkg/Application/MpServiceProtocol/MpServiceProtocol.inf
-  123IVPkg/Application/Ec/Ec.inf
+  123IVPkg/Application/Ec/Ec.inf {
+!if $(REDFISH_ENABLE) == TRUE
+    <Packages>
+      RedfishPkg/RedfishPkg.dec
+    <LibraryClasses>
+      JsonLib|RedfishPkg/Library/JsonLib/JsonLib.inf
+    <BuildOptions>
+      *_*_*_CC_FLAGS = -D REDFISH_ENABLE
+!endif
+  }
   123IVPkg/Application/PowerTest/PowerTest.inf
-
-[BuildOptions]
-  *_*_*_CC_FLAGS  = /D REDFISH_ENABLE

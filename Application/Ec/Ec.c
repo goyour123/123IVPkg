@@ -12,7 +12,9 @@
 #include <Protocol/LoadedImage.h>
 #include <Protocol/DevicePath.h>
 
+#if defined (REDFISH_ENABLE)
 #include <Library/JsonLib.h>
+#endif
 
 #define TIME_OUT               0xffff
 
@@ -299,13 +301,14 @@ EcMain (
   UINT8                           Data;
   UINT8                           *Buffer;
   UINTN                           BufferLen;
+  UINTN                           EcCommandStatusPort, EcDataPort;
+#if defined (REDFISH_ENABLE)
   EFI_LOADED_IMAGE_PROTOCOL       *LoadedImage;
   EFI_DEVICE_PATH_PROTOCOL        *DevicePath;
   EFI_HANDLE                      DeviceHandle;
   EFI_SIMPLE_FILE_SYSTEM_PROTOCOL *SimpleFileSystem;
   EFI_FILE                        *Root;
   EFI_FILE                        *FileHandle;
-  UINTN                           EcCommandStatusPort, EcDataPort;
   EDKII_JSON_VALUE                *JsonObj;
   EDKII_JSON_ERROR                JsonErr;
 
@@ -389,6 +392,10 @@ EcMain (
 
   EcCommandStatusPort = StrHexToUintn (JsonValueGetUnicodeString (JsonObjectGetValue (JsonObj, "CommandStatusPort")));
   EcDataPort = StrHexToUintn (JsonValueGetUnicodeString (JsonObjectGetValue (JsonObj, "DataPort")));
+#else
+  EcCommandStatusPort = EC_COMMAND_STATUS_PORT;
+  EcDataPort = EC_DATA_PORT;
+#endif
 
   Data = 0;
   BufferLen = 0x100;

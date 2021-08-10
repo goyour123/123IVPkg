@@ -14,7 +14,6 @@
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
   123IVPkg/123IVPkg.dec
-  RedfishPkg/RedfishPkg.dec
 
 [LibraryClasses]
   UefiLib
@@ -23,7 +22,6 @@
   MemoryAllocationLib
   UefiBootServicesTableLib
   UiLib
-  JsonLib
 
 [Protocols]
   gEfiLoadedImageProtocolGuid
