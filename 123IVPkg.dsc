@@ -75,14 +75,12 @@
   #
   123IVPkg/Application/XhciViewer/XhciViewer.inf
   123IVPkg/Application/MpServiceProtocol/MpServiceProtocol.inf
-  123IVPkg/Application/Ec/Ec.inf {
 !if $(REDFISH_ENABLE) == TRUE
-    <Packages>
-      RedfishPkg/RedfishPkg.dec
-    <LibraryClasses>
-      JsonLib|RedfishPkg/Library/JsonLib/JsonLib.inf
+  123IVPkg/Application/Ec/EcJson.inf {
     <BuildOptions>
       *_*_*_CC_FLAGS = -D REDFISH_ENABLE
-!endif
   }
+!else
+  123IVPkg/Application/Ec/Ec.inf
+!endif
   123IVPkg/Application/PowerTest/PowerTest.inf
