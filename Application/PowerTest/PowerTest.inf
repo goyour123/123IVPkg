@@ -19,3 +19,6 @@
   UefiApplicationEntryPoint
   IoLib
   RtcLib
+
+[Protocols]
+  gEfiAcpiSdtProtocolGuid
