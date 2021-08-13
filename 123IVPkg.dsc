@@ -69,12 +69,12 @@
   123IVPkg/Samples/Hello/Hello.inf
   123IVPkg/Samples/Hello/Hello2.inf
   123IVPkg/Samples/PciScan/PciScan.inf
+  123IVPkg/Samples/MpServiceProtocol/MpServiceProtocol.inf
 
   #
   # Application
   #
   123IVPkg/Application/XhciViewer/XhciViewer.inf
-  123IVPkg/Application/MpServiceProtocol/MpServiceProtocol.inf
 !if $(REDFISH_ENABLE) == TRUE
   123IVPkg/Application/Ec/EcJson.inf {
     <BuildOptions>

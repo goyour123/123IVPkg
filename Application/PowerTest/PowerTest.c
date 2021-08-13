@@ -113,7 +113,6 @@ PowerTestMain (
           Pm1aEvtReg = ACPI_PM1A_EVT_BLK_ADDR;
           Pm1aCntReg = ACPI_PM1A_CNT_BLK_ADDR;
         }
-        Print (L"Pm1aEvtReg: %x\n", Pm1aEvtReg);
         FadtFound = TRUE;
       }
       FreePool (AcpiSdtHeader);
@@ -122,6 +121,9 @@ PowerTestMain (
     Pm1aEvtReg = ACPI_PM1A_EVT_BLK_ADDR;
     Pm1aCntReg = ACPI_PM1A_CNT_BLK_ADDR;
   }
+
+  Print (L"Pm1aEvtReg: %x\n", Pm1aEvtReg);
+  Print (L"Pm1aCntReg: %x\n", Pm1aCntReg);
 
   //
   // Clear RTC_STS and set RTC_EN
