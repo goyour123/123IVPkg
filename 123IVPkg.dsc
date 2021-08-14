@@ -70,6 +70,7 @@
   123IVPkg/Samples/Hello/Hello2.inf
   123IVPkg/Samples/PciScan/PciScan.inf
   123IVPkg/Samples/MpServiceProtocol/MpServiceProtocol.inf
+  123IVPkg/Samples/SerialIo/SerialIo.inf
 
   #
   # Application
