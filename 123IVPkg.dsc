@@ -23,6 +23,7 @@
   #
   # Entry Point Libraries
   #
+  UefiDriverEntryPoint|MdePkg/Library/UefiDriverEntryPoint/UefiDriverEntryPoint.inf
   UefiApplicationEntryPoint|MdePkg/Library/UefiApplicationEntryPoint/UefiApplicationEntryPoint.inf
   ShellCEntryLib|ShellPkg/Library/UefiShellCEntryLib/UefiShellCEntryLib.inf
 
@@ -36,6 +37,7 @@
   DevicePathLib|MdePkg/Library/UefiDevicePathLib/UefiDevicePathLib.inf
   UefiRuntimeServicesTableLib|MdePkg/Library/UefiRuntimeServicesTableLib/UefiRuntimeServicesTableLib.inf
   UefiBootServicesTableLib|MdePkg/Library/UefiBootServicesTableLib/UefiBootServicesTableLib.inf
+  SmmServicesTableLib|MdePkg/Library/SmmServicesTableLib/SmmServicesTableLib.inf
 
   #
   # Basic Libraries
@@ -85,3 +87,8 @@
   123IVPkg/Application/Ec/Ec.inf
 !endif
   123IVPkg/Application/PowerTest/PowerTest.inf
+  
+  #
+  # Smm Driver
+  #
+  123IVPkg/Smm/MmChildDispatcher/MmChildDispatcher.inf
