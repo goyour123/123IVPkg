@@ -27,6 +27,18 @@ SxSmiCallback (
 
 EFI_STATUS
 EFIAPI
+PeriodicTimerSmiCallback (
+  IN EFI_HANDLE        DispatchHandle,
+  IN CONST VOID        *Context,
+  IN OUT VOID          *CommBuffer,
+  IN OUT UINTN         *CommBufferSize
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
 IoTrapSmiCallback (
   IN EFI_HANDLE        DispatchHandle,
   IN CONST VOID        *Context,
@@ -108,6 +120,41 @@ RegisterSxSmi (
 
 EFI_STATUS
 EFIAPI
+RegisterPeriodicTimerSmi (
+  )
+{
+  EFI_STATUS                               Status;
+  EFI_MM_PERIODIC_TIMER_DISPATCH_PROTOCOL  *MmPeriodicTimerProtocol;
+  EFI_MM_PERIODIC_TIMER_REGISTER_CONTEXT   MmPeriodicTimerRegisterContext;
+  EFI_HANDLE                               MmSwHandle;
+
+  Status = gSmst->SmmLocateProtocol (
+                    &gEfiMmPeriodicTimerDispatchProtocolGuid,
+                    NULL,
+                    &MmPeriodicTimerProtocol
+                    );
+  if (EFI_ERROR (Status)) {
+    return Status;
+  }
+
+  MmPeriodicTimerRegisterContext.Period          = 40000;
+  MmPeriodicTimerRegisterContext.MmiTickInterval = 20000;
+
+  Status = MmPeriodicTimerProtocol->Register (
+                                      MmPeriodicTimerProtocol,
+                                      PeriodicTimerSmiCallback,
+                                      &MmPeriodicTimerRegisterContext,
+                                      &MmSwHandle
+                                      );
+  if EFI_ERROR (Status) {
+    return Status;
+  }
+
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
 RegisterIoTrapSmi (
   )
 {
@@ -158,6 +205,11 @@ MmChildDispatcherEntryPoint (
   }
 
   Status = RegisterSxSmi ();
+  if (EFI_ERROR (Status)) {
+    return Status;
+  }
+
+  Status = RegisterPeriodicTimerSmi ();
   if (EFI_ERROR (Status)) {
     return Status;
   }

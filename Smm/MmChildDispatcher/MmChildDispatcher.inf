@@ -19,11 +19,13 @@
   SmmServicesTableLib
 
 [Protocols]
-  gEfiMmSwDispatchProtocolGuid      ##CONSUMES
-  gEfiMmSxDispatchProtocolGuid      ##CONSUMES
-  gEfiMmIoTrapDispatchProtocolGuid  ##CONSUMES
+  gEfiMmSwDispatchProtocolGuid             ##CONSUMES
+  gEfiMmSxDispatchProtocolGuid             ##CONSUMES
+  gEfiMmPeriodicTimerDispatchProtocolGuid  ##CONSUMES
+  gEfiMmIoTrapDispatchProtocolGuid         ##CONSUMES
 
 [Depex]
   gEfiMmSwDispatchProtocolGuid AND
   gEfiMmSxDispatchProtocolGuid AND
+  gEfiMmPeriodicTimerDispatchProtocolGuid AND
   gEfiMmIoTrapDispatchProtocolGuid
