@@ -19,9 +19,7 @@ Cf9TrapCallback (
 
 EFI_STATUS
 EFIAPI
-MmChildDispatcherEntryPoint (
-  IN EFI_HANDLE        ImageHandle,
-  IN EFI_SYSTEM_TABLE  *SystemTable
+RegisterIoTrap (
   )
 {
   EFI_STATUS                            Status;
@@ -35,7 +33,7 @@ MmChildDispatcherEntryPoint (
                     &MmIoTrapProtocol
                     );
   if (EFI_ERROR (Status)) {
-      return Status;
+    return Status;
   }
 
   MmIoTrapRegisterContext.Address = 0xcf9;
@@ -48,6 +46,27 @@ MmChildDispatcherEntryPoint (
                                &MmIoTrapRegisterContext,
                                &MmIoTrapHandle
                                );
+  if EFI_ERROR (Status) {
+    return Status;
+  }
+
+  return EFI_SUCCESS;
+}
+
+
+EFI_STATUS
+EFIAPI
+MmChildDispatcherEntryPoint (
+  IN EFI_HANDLE        ImageHandle,
+  IN EFI_SYSTEM_TABLE  *SystemTable
+  )
+{
+  EFI_STATUS                            Status;
+
+  Status = RegisterIoTrap ();
+  if (EFI_ERROR (Status)) {
+    return Status;
+  }
 
   return EFI_SUCCESS;
 }
