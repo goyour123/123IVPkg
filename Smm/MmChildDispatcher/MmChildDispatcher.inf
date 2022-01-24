@@ -1,11 +1,12 @@
 
 [Defines]
-  INF_VERSION      = 0x00010006
-  BASE_NAME        = MmChildDispatcher
-  FILE_GUID        = 07D3363A-1234-46F7-A454-F3EAE3DE6C6E
-  MODULE_TYPE      = DXE_SMM_DRIVER
-  VERSION_STRING   = 0.1
-  ENTRY_POINT      = MmChildDispatcherEntryPoint
+  INF_VERSION               = 0x00010006
+  BASE_NAME                 = MmChildDispatcher
+  FILE_GUID                 = 07D3363A-1234-46F7-A454-F3EAE3DE6C6E
+  MODULE_TYPE               = DXE_SMM_DRIVER
+  PI_SPECIFICATION_VERSION  = 0x00010032
+  VERSION_STRING            = 0.1
+  ENTRY_POINT               = MmChildDispatcherEntryPoint
 
 [Sources]
   MmChildDispatcher.c
@@ -18,7 +19,11 @@
   SmmServicesTableLib
 
 [Protocols]
+  gEfiMmSwDispatchProtocolGuid      ##CONSUMES
+  gEfiMmSxDispatchProtocolGuid      ##CONSUMES
   gEfiMmIoTrapDispatchProtocolGuid  ##CONSUMES
 
 [Depex]
+  gEfiMmSwDispatchProtocolGuid AND
+  gEfiMmSxDispatchProtocolGuid AND
   gEfiMmIoTrapDispatchProtocolGuid

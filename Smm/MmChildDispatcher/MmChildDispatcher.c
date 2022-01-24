@@ -1,13 +1,9 @@
 
-#include <Uefi.h>
-
-#include <Library/SmmServicesTableLib.h>
-
-#include <Protocol/MmIoTrapDispatch.h>
+#include "MmChildDispatcher.h"
 
 EFI_STATUS
 EFIAPI
-Cf9TrapCallback (
+SwSmiCallback (
   IN EFI_HANDLE        DispatchHandle,
   IN CONST VOID        *Context,
   IN OUT VOID          *CommBuffer,
@@ -19,7 +15,100 @@ Cf9TrapCallback (
 
 EFI_STATUS
 EFIAPI
-RegisterIoTrap (
+SxSmiCallback (
+  IN EFI_HANDLE        DispatchHandle,
+  IN CONST VOID        *Context,
+  IN OUT VOID          *CommBuffer,
+  IN OUT UINTN         *CommBufferSize
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+IoTrapSmiCallback (
+  IN EFI_HANDLE        DispatchHandle,
+  IN CONST VOID        *Context,
+  IN OUT VOID          *CommBuffer,
+  IN OUT UINTN         *CommBufferSize
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+RegisterSwSmi (
+  )
+{
+  EFI_STATUS                            Status;
+  EFI_MM_SW_DISPATCH_PROTOCOL           *MmSwProtocol;
+  EFI_MM_SW_REGISTER_CONTEXT            MmSwRegisterContext;
+  EFI_HANDLE                            MmSwHandle;
+
+  Status = gSmst->SmmLocateProtocol (
+                    &gEfiMmSwDispatchProtocolGuid,
+                    NULL,
+                    &MmSwProtocol
+                    );
+  if (EFI_ERROR (Status)) {
+    return Status;
+  }
+
+  MmSwRegisterContext.SwMmiInputValue = 0x66;
+
+  Status = MmSwProtocol->Register (
+                           MmSwProtocol,
+                           SwSmiCallback,
+                           &MmSwRegisterContext,
+                           &MmSwHandle
+                           );
+  if EFI_ERROR (Status) {
+    return Status;
+  }
+
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+RegisterSxSmi (
+  )
+{
+  EFI_STATUS                            Status;
+  EFI_MM_SX_DISPATCH_PROTOCOL           *MmSwProtocol;
+  EFI_MM_SX_REGISTER_CONTEXT            MmSwRegisterContext;
+  EFI_HANDLE                            MmSwHandle;
+
+  Status = gSmst->SmmLocateProtocol (
+                    &gEfiMmSwDispatchProtocolGuid,
+                    NULL,
+                    &MmSwProtocol
+                    );
+  if (EFI_ERROR (Status)) {
+    return Status;
+  }
+
+  MmSwRegisterContext.Type  = SxS5;
+  MmSwRegisterContext.Phase = SxEntry;
+
+  Status = MmSwProtocol->Register (
+                           MmSwProtocol,
+                           SxSmiCallback,
+                           &MmSwRegisterContext,
+                           &MmSwHandle
+                           );
+  if EFI_ERROR (Status) {
+    return Status;
+  }
+
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+RegisterIoTrapSmi (
   )
 {
   EFI_STATUS                            Status;
@@ -42,7 +131,7 @@ RegisterIoTrap (
 
   Status = MmIoTrapProtocol->Register (
                                MmIoTrapProtocol,
-                               Cf9TrapCallback,
+                               IoTrapSmiCallback,
                                &MmIoTrapRegisterContext,
                                &MmIoTrapHandle
                                );
@@ -61,9 +150,19 @@ MmChildDispatcherEntryPoint (
   IN EFI_SYSTEM_TABLE  *SystemTable
   )
 {
-  EFI_STATUS                            Status;
+  EFI_STATUS           Status;
 
-  Status = RegisterIoTrap ();
+  Status = RegisterSwSmi ();
+  if (EFI_ERROR (Status)) {
+    return Status;
+  }
+
+  Status = RegisterSxSmi ();
+  if (EFI_ERROR (Status)) {
+    return Status;
+  }
+
+  Status = RegisterIoTrapSmi ();
   if (EFI_ERROR (Status)) {
     return Status;
   }
