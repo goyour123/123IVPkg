@@ -7,6 +7,17 @@
 
 #include <Protocol/SerialIo.h>
 
+VOID
+PrintMainQuest (
+  )
+{
+  Print (L"\n");
+  Print (L"1. Write Serial Port from keyboard\n");
+  Print (L"2. Read Serial Port\n");
+  Print (L"3. Retrieves the status of the control bits\n");
+  Print (L"Press \"Q\" or ESC to quit\n");
+}
+
 EFI_STATUS
 EFIAPI
 SerialIoMain (
@@ -20,6 +31,7 @@ SerialIoMain (
   UINTN                  BufLen;
   EFI_INPUT_KEY          Key;
   CHAR8                  AsciiChar;
+  UINT32                 ControlBits;
 
   Status = gBS->LocateProtocol (&gEfiSerialIoProtocolGuid, NULL, &SerialIo);
   if (EFI_ERROR (Status)) {
@@ -55,8 +67,7 @@ SerialIoMain (
   //   return Status;
   // }
 
-  Print (L"1. Write Serial Port from keyboard\n");
-  Print (L"Press \"Q\" or ESC to quit\n");
+  PrintMainQuest ();
 
   while (TRUE) {
 
@@ -82,15 +93,29 @@ SerialIoMain (
         Status = SerialIo->Write (SerialIo, &BufLen, &AsciiChar);
         if (EFI_ERROR (Status)) {
           Print (L"SerialIo->Write: %r\n", Status);
+          return Status;
         }
       }
-    } else {
-      continue;
+    } else if (Key.UnicodeChar == L'2') {
+      Print (L"Reading Serial Port...\n");
+      Print (L"\n");
+      BufLen = 1;
+      Status = SerialIo->Read (SerialIo, &BufLen, &AsciiChar);
+      if (EFI_ERROR (Status)) {
+        Print (L"SerialIo->Read: %r\n", Status);
+      }
+      Print (L"Buffer Length: %x\n", BufLen);
+      Print (L"Read Out: %c\n", AsciiChar);
+    } else if (Key.UnicodeChar == L'3') {
+      Status = SerialIo->GetControl (SerialIo, &ControlBits);
+      if (EFI_ERROR (Status)) {
+        Print (L"SerialIo GetControl: %r\n", Status);
+        return Status;
+      }
+      Print (L"Control Bits: 0x%x\n", ControlBits);
     }
 
-    Print (L"1. Write Serial Port from keyboard\n");
-    Print (L"Press \"Q\" or ESC to quit\n");
-    Print (L"\n");
+    PrintMainQuest ();
   }
 
   return EFI_SUCCESS;
