@@ -34,7 +34,6 @@ PowerTestMain (
   EFI_ACPI_SDT_HEADER       *AcpiSdtHeader;
   EFI_ACPI_TABLE_VERSION    AcpiTableVersion;
   UINTN                     TableKey;
-  BOOLEAN                   FadtFound;
   UINT32                    Pm1aEvtReg, Pm1aCntReg;
 
   WakeAfterSec = WAKE_AFTER_SECONDS;
@@ -96,27 +95,20 @@ PowerTestMain (
   //
   Status = gBS->LocateProtocol (&gEfiAcpiSdtProtocolGuid, NULL, &AcpiSdtProtocol);
   if (!EFI_ERROR (Status)) {
-    FadtFound = FALSE;
-    for (Index = 0; FadtFound == FALSE; Index++) {
-      Status = AcpiSdtProtocol->GetAcpiTable (Index, &AcpiSdtHeader, &AcpiTableVersion, &TableKey);
+    Index = 0;
+    do {
+      Status = AcpiSdtProtocol->GetAcpiTable (Index++, &AcpiSdtHeader, &AcpiTableVersion, &TableKey);
       if (EFI_ERROR (Status)) {
         Print (L"AcpiSdtProtocol->GetAcpiTable: %r\n", Status);
         return Status;
       }
 
       if (AcpiSdtHeader->Signature == SIGNATURE_32 ('F', 'A', 'C', 'P')) {
-        Print (L"AcpiTableVersion: %x\n", AcpiTableVersion);
-        if (AcpiTableVersion & EFI_ACPI_TABLE_VERSION_5_0) {
-          Pm1aEvtReg = ((EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE *) AcpiSdtHeader)->Pm1aEvtBlk;
-          Pm1aCntReg = ((EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE *) AcpiSdtHeader)->Pm1aCntBlk;
-        } else {
-          Pm1aEvtReg = ACPI_PM1A_EVT_BLK_ADDR;
-          Pm1aCntReg = ACPI_PM1A_CNT_BLK_ADDR;
-        }
-        FadtFound = TRUE;
+        Pm1aEvtReg = ((EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE *) AcpiSdtHeader)->Pm1aEvtBlk;
+        Pm1aCntReg = ((EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE *) AcpiSdtHeader)->Pm1aCntBlk;
+        break;
       }
-      FreePool (AcpiSdtHeader);
-    }
+    } while (TRUE);
   } else {
     Pm1aEvtReg = ACPI_PM1A_EVT_BLK_ADDR;
     Pm1aCntReg = ACPI_PM1A_CNT_BLK_ADDR;
