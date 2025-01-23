@@ -89,7 +89,8 @@
   123IVPkg/Application/Ec/Ec.inf
 !endif
   123IVPkg/Application/PowerTest/PowerTest.inf
-  
+  123IVPkg/Application/UsbLanMac/UsbLanMac.inf
+
   #
   # Smm Driver
   #

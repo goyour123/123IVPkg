@@ -1,0 +1,23 @@
+
+[Defines]
+  INF_VERSION    = 0x00010006
+  BASE_NAME      = UsbLanMac
+  FILE_GUID      = 71b44d90-1234-4a89-95d2-d28cc1c73062
+  MODULE_TYPE    = UEFI_APPLICATION
+  VERSION_STRING = 0.1
+  ENTRY_POINT    = UsbLanMacMain
+
+[Sources]
+  UsbLanMac.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+
+[Protocols]
+  gEfiUsbIoProtocolGuid
+  gEfiSimpleNetworkProtocolGuid
+  gEfiDevicePathToTextProtocolGuid
+
+[LibraryClasses]
+  UefiLib
+  UefiApplicationEntryPoint
