@@ -89,6 +89,7 @@
   123IVPkg/Application/Ec/Ec.inf
 !endif
   123IVPkg/Application/PowerTest/PowerTest.inf
+  123IVPkg/Application/ResetTest/ResetTest.inf
   123IVPkg/Application/UsbLanMac/UsbLanMac.inf
 
   #

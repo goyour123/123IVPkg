@@ -1,0 +1,25 @@
+
+[Defines]
+  INF_VERSION      = 0x00010006
+  BASE_NAME        = ResetTest
+  FILE_GUID        = A49DB72E-1234-4C40-83C7-C6515D253B7E
+  MODULE_TYPE      = UEFI_APPLICATION
+  VERSION_STRING   = 0.1
+  ENTRY_POINT      = ResetTestMain
+
+[Sources]
+  ResetTest.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  123IVPkg/123IVPkg.dec
+
+[Guids]
+  gEfi123ivVariableGuid
+
+[Protocols]
+  gEfiShellParametersProtocolGuid
+
+[LibraryClasses]
+  UefiLib
+  UefiApplicationEntryPoint
