@@ -96,3 +96,7 @@
   # Smm Driver
   #
   123IVPkg/Smm/MmChildDispatcher/MmChildDispatcher.inf
+
+[Components.X64]
+  123IVPkg/Samples/PageFault/PageFault.inf
+
